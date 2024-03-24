@@ -4,18 +4,14 @@ import { parseEther } from "viem";
 import { baseSepolia } from "viem/chains";
 
 import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
-
-// state: {
-//   frameId: frame.id,
-//   name: frame.name,
-//   shop: frame.shop,
-//   fid: frame.fid,
-// },
+import { fdk } from "@/server/pinata";
+import { convertToSlug } from "@/lib/utils";
 
 async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body: FrameRequest = await req.json();
   const frameId = req.nextUrl.searchParams.get("frameId");
   const address = req.nextUrl.searchParams.get("address") as `0x${string}`;
+  const productName = req.nextUrl.searchParams.get("productName");
 
   if (!frameId || !address) {
     return new NextResponse("Missing frameId or address", { status: 400 });
@@ -24,7 +20,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     neynarApiKey: process.env.NEYNAR_API_KEY,
   });
 
-  console.log("isValid", isValid, message);
+  const friendlyName = convertToSlug(productName || "frame");
+  const frame_id = `${frameId}-${friendlyName}`;
+
+  await fdk.sendAnalytics(frame_id, body as any);
+
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
   }

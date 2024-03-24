@@ -39,7 +39,7 @@ export async function generateMetadata(
       {
         label: "Buy with Base",
         action: "tx",
-        target: `${process.env.NEXT_PUBLIC_URL}/api/tx?frameId=${frame.id}&address=${frame.address}`,
+        target: `${process.env.NEXT_PUBLIC_URL}/api/tx?frameId=${frame.id}&address=${frame.address}&productName=${frame.name}`,
         postUrl: `${process.env.NEXT_PUBLIC_URL}/api/tx-success?productName=${frame.name}&frameId=${frame.id}&shop=${frame.shop}&fid=${frame.fid}`,
       },
     ],

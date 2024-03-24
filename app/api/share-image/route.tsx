@@ -32,7 +32,7 @@ export async function GET(request: Request) {
             borderRadius: 128,
           }}
         /> */}
-        <p>Thanks for your purchase {username}</p>
+        <p>Thanks for your purchase @{username}</p>
         <p>Wait for an email to complete your shipping details</p>
         <p>Meanwhile, share with your {followerCount} frens on Farcaster!</p>
         <p>Stay Based!</p>

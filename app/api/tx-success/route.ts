@@ -1,4 +1,6 @@
 import { NEXT_PUBLIC_URL } from "@/app/config";
+import { convertToSlug } from "@/lib/utils";
+import { fdk } from "@/server/pinata";
 import {
   FrameRequest,
   getFrameMessage,
@@ -26,6 +28,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const shop = req.nextUrl.searchParams.get("shop");
   const fid = req.nextUrl.searchParams.get("fid");
   const { isValid } = await getFrameMessage(body);
+
+  const friendlyName = convertToSlug(productName || "frame");
+  const frame_id = `${frameId}-${friendlyName}`;
+  await fdk.sendAnalytics(frame_id, body as any);
 
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
