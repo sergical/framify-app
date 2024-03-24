@@ -10,7 +10,7 @@ export async function GET() {
       <div
         style={{
           display: "flex",
-          fontSize: 60,
+          fontSize: 30,
           color: "black",
           background: "#f6f6f6",
           width: "100%",

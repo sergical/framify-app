@@ -19,6 +19,7 @@ export const dynamic = "force-dynamic";
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: FrameRequest = await req.json();
+  const productName = req.nextUrl.searchParams.get("productName");
   const { isValid, message } = await getFrameMessage(body);
 
   if (!isValid) {
@@ -32,7 +33,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error(e);
   }
 
-  const productName = state?.name;
+  console.log("message", message);
+  console.log("state", state);
 
   return new NextResponse(
     getFrameHtmlResponse({
