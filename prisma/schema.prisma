@@ -36,3 +36,13 @@ model Frame {
   checkoutUrl String @unique
   price   Float
 }
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  shopUrl   String
+  frameId   Int // Internal DB ID of the frame
+  purchasedBy Int // Farcaster ID of the buyer
+  emailAddress String
+  timePlaced DateTime
+  transactionId String
+}

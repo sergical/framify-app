@@ -1,24 +1,34 @@
 import { FrameRequest, getFrameMessage } from "@coinbase/onchainkit/frame";
 import { NextRequest, NextResponse } from "next/server";
-import { encodeFunctionData, parseEther } from "viem";
+import { parseEther } from "viem";
 import { baseSepolia } from "viem/chains";
 
 import type { FrameTransactionResponse } from "@coinbase/onchainkit/frame";
 
-async function getResponse(
-  req: NextRequest,
-  address: `0x${string}`
-): Promise<NextResponse | Response> {
+// state: {
+//   frameId: frame.id,
+//   name: frame.name,
+//   shop: frame.shop,
+//   fid: frame.fid,
+// },
+
+async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const body: FrameRequest = await req.json();
+  const frameId = req.nextUrl.searchParams.get("frameId");
+  const address = req.nextUrl.searchParams.get("address") as `0x${string}`;
 
-  const { isValid } = await getFrameMessage(body, {
-    neynarApiKey: "NEYNAR_ONCHAIN_KIT",
+  const { isValid, message } = await getFrameMessage(body, {
+    neynarApiKey: process.env.NEYNAR_API_KEY,
   });
-
-  console.log("isValid", isValid);
 
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
+  }
+  let state = {};
+  try {
+    state = JSON.parse(decodeURIComponent(message?.state?.serialized || ""));
+  } catch (e) {
+    console.error(e);
   }
 
   const txData: FrameTransactionResponse = {
@@ -27,19 +37,14 @@ async function getResponse(
     params: {
       abi: [],
       to: address,
-      value: parseEther("0.01").toString(), // 0.00004 ETH
+      value: parseEther("0.001").toString(), // TODO get product price
     },
   };
-  return NextResponse.json(txData);
+  return NextResponse.json({ txData, frameId });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
-  console.log("POST");
-  const address = req.nextUrl.searchParams.get("address") as `0x${string}`;
-  if (!address) {
-    return new NextResponse("Address not found", { status: 400 });
-  }
-  return getResponse(req, address);
+  return getResponse(req);
 }
 
 export const dynamic = "force-dynamic";

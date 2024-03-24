@@ -4,13 +4,14 @@ import db from "@/server/db";
 
 import { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: { frameId: string };
 };
 
 async function getData(frameId: number) {
-  return db.frame.findFirst({ where: { id: frameId } });
+  return await db.frame.findFirst({ where: { id: frameId } });
 }
 
 export async function generateMetadata(
@@ -22,7 +23,9 @@ export async function generateMetadata(
   const id = parseInt(frameId);
   const frame = await getData(id);
   if (!frame) {
-    throw new Error("Frame not found");
+    return {
+      title: "Frame not found",
+    };
   }
 
   // Step 2. Use getFrameMetadata to shape your Frame metadata
@@ -36,11 +39,16 @@ export async function generateMetadata(
       {
         label: "Buy with Base",
         action: "tx",
-        target: `${process.env.NEXT_PUBLIC_URL}/api/tx?address=${frame.address}`,
+        target: `${process.env.NEXT_PUBLIC_URL}/api/tx`,
         postUrl: `${process.env.NEXT_PUBLIC_URL}/api/tx-success`,
       },
     ],
-
+    state: {
+      frameId: frame.id,
+      name: frame.name,
+      shop: frame.shop,
+      fid: frame.fid,
+    },
     image: {
       aspectRatio: "1:1",
       src: frame.imageUrl,
@@ -66,7 +74,7 @@ export default async function ProductPage({ params }: Props) {
   const id = parseInt(frameId);
   const frameData = await getData(id);
   if (!frameData) {
-    throw new Error("Frame not found");
+    notFound();
   }
   return (
     <div className="min-h-screen flex justify-center items-center">
