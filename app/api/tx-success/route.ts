@@ -19,23 +19,17 @@ export const dynamic = "force-dynamic";
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: FrameRequest = await req.json();
+
   const productName = req.nextUrl.searchParams.get("productName");
-  const { isValid, message } = await getFrameMessage(body);
+
+  const frameId = req.nextUrl.searchParams.get("frameId");
+  const shop = req.nextUrl.searchParams.get("shop");
+  const fid = req.nextUrl.searchParams.get("fid");
+  const { isValid } = await getFrameMessage(body);
 
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
   }
-
-  let state = {} as any;
-  try {
-    state = JSON.parse(decodeURIComponent(message?.state?.serialized || ""));
-  } catch (e) {
-    console.error(e);
-  }
-
-  console.log("message", message);
-  console.log("state", state);
-
   return new NextResponse(
     getFrameHtmlResponse({
       input: {
@@ -55,10 +49,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         src: `${NEXT_PUBLIC_URL}/api/success-image?productName=${productName}`,
       },
       state: {
-        ...state,
         transactionId: body?.untrustedData?.transactionId,
       },
-      postUrl: `${NEXT_PUBLIC_URL}/api/email-address`,
+      postUrl: `${NEXT_PUBLIC_URL}/api/email-address?frameId=${frameId}&shop=${shop}&fid=${fid}`,
     })
   );
 }

@@ -17,6 +17,10 @@ import db from "@/server/db";
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   const body: FrameRequest = await req.json();
+  const frameId = parseInt(req.nextUrl.searchParams.get("frameId") || "");
+  const shop = req.nextUrl.searchParams.get("shop");
+  const fid = parseInt(req.nextUrl.searchParams.get("fid") || "");
+
   const { isValid, message } = await getFrameMessage(body, {
     neynarApiKey: process.env.NEYNAR_API_KEY,
   });
@@ -38,11 +42,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   } catch (e) {
     console.error(e);
   }
-  const shopUrl = state?.shop || "";
-  const fid = state?.fid || "";
-  const name = state?.name || "";
+
   const transactionId = state?.transactionId || "";
-  const frameId = state?.frameId || 0;
 
   const userAddress = await getFarcasterUserAddress(fid, {
     neynarApiKey: process.env.NEYNAR_API_KEY,
@@ -51,7 +52,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   await db.order.create({
     data: {
       frameId: frameId,
-      shopUrl: shopUrl,
+      shopUrl: shop || "",
       emailAddress: emailAddress,
       purchasedBy,
       timePlaced: new Date(),
