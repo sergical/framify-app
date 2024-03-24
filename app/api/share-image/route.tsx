@@ -4,7 +4,10 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const followerCount = searchParams.get("followerCount");
+  const username = searchParams.get("username");
   return new ImageResponse(
     (
       <div
@@ -29,11 +32,9 @@ export async function GET() {
             borderRadius: 128,
           }}
         /> */}
+        <p>Thanks for your purchase {username}</p>
         <p>Wait for an email to complete your shipping details</p>
-        <p>
-          Meanwhile, share with your friends to get a discount on your next
-          purchase.
-        </p>
+        <p>Meanwhile, share with your {followerCount} frens on Farcaster!</p>
         <p>Stay Based!</p>
       </div>
     ),

@@ -47,14 +47,36 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const transactionId = state?.transactionId || "";
 
   const res = await fetch(
-    `https://fnames.farcaster.xyz/transfers/current?fid=${fid}`
+    `https://api.pinata.cloud/v3/farcaster/users/${fid}`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.PINATA_JWT}`,
+      },
+    }
   );
 
-  const data = await res.json();
-  if (!data) {
+  // "data": {
+  //   "bio": "Writer. Building @pinatacloud. Tinkering with a Farcaster native alternative to GoodReads: https://readcast.xyz \\ https://polluterofminds.com",
+  //   "custody_address": "0x7f9a6992a54dc2f23f1105921715bd61811e5b71",
+  //   "display_name": "Justin Hunter",
+  //   "fid": 4823,
+  //   "follower_count": 11049,
+  //   "following_count": 811,
+  //   "pfp_url": "https://i.seadn.io/gae/lhGgt7yK1JiBVYz_HBxcAmYLRtP03aw5xKX4FgmFT9Ai7kLD5egzlLvb0lkuRNl28shtjr07DC8IHzLUkTqlWUMndUzC9R5_MSxH3g?w=500&auto=format",
+  //   "recovery_address": "0x00000000fcb080a4d6c39a9354da9eb9bc104cd7",
+  //   "username": "polluterofminds",
+  //   "verifications": [
+  //     "0x1612c6dff0eb5811108b709a30d8150495ce9cc5",
+  //     "0xcdcdc174901b12e87cc82471a2a2bd6181c89392"
+  //   ]
+  // }
+
+  const json = await res.json();
+  if (!json) {
     return new NextResponse("No user found", { status: 500 });
   }
-  const userAddress = data.transfer.username;
+  const userAddress = json?.data?.username || "";
+  const followers = json?.data?.follower_count || 0;
 
   await db.order.create({
     data: {
@@ -78,7 +100,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         },
       ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/share-image`,
+        src: `${NEXT_PUBLIC_URL}/api/share-image?followerCount=${followers}&username=${userAddress}`,
       },
     })
   );
