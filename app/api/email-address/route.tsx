@@ -46,9 +46,15 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   const transactionId = state?.transactionId || "";
 
-  const userAddress = await getFarcasterUserAddress(fid, {
-    neynarApiKey: process.env.NEYNAR_API_KEY,
-  });
+  const res = await fetch(
+    `https://fnames.farcaster.xyz/transfers/current?fid=${fid}`
+  );
+
+  const data = await res.json();
+  if (!data) {
+    return new NextResponse("No user found", { status: 500 });
+  }
+  const userAddress = data.transfer.username;
 
   await db.order.create({
     data: {
