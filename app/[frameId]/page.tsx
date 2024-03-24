@@ -34,9 +34,10 @@ export async function generateMetadata(
   const frameMetadata = getFrameMetadata({
     buttons: [
       {
-        label: "View on framify.xyz",
-        action: "link",
-        target: `${process.env.NEXT_PUBLIC_URL}/${frame.id}`,
+        label: "Buy with Base",
+        action: "tx",
+        target: `${process.env.NEXT_PUBLIC_URL}/api/tx?frameId=${frame.id}&address=${frame.address}&productName=${frame.name}`,
+        postUrl: `${process.env.NEXT_PUBLIC_URL}/api/tx-success?productName=${frame.name}&frameId=${frame.id}&shop=${frame.shop}&fid=${frame.fid}`,
       },
       {
         label: "Checkout with Shopify",
@@ -44,10 +45,9 @@ export async function generateMetadata(
         target: frame.checkoutUrl,
       },
       {
-        label: "Buy with Base",
-        action: "tx",
-        target: `${process.env.NEXT_PUBLIC_URL}/api/tx?frameId=${frame.id}&address=${frame.address}&productName=${frame.name}`,
-        postUrl: `${process.env.NEXT_PUBLIC_URL}/api/tx-success?productName=${frame.name}&frameId=${frame.id}&shop=${frame.shop}&fid=${frame.fid}`,
+        label: "View on framify.xyz",
+        action: "link",
+        target: `${process.env.NEXT_PUBLIC_URL}/${frame.id}`,
       },
     ],
     image: {
