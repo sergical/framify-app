@@ -60,29 +60,28 @@ export default function AccountCard({
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
-                <form>
-                  <div className="grid w-full items-center gap-4">
-                    {farcasterFid ? (
-                      <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="name">Farcaster username</Label>
-                        <CopyInput text={farcasterFid} />
-                      </div>
-                    ) : (
-                      <p>No Farcaster account connected</p>
-                    )}
-                    {userHasEmbeddedWallet() ? (
-                      <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="name">Embedded wallet</Label>
-                        <CopyInput
-                          text={truncatedAddress}
-                          copyText={embeddedWalletAddress}
-                        />
-                      </div>
-                    ) : (
-                      <Button>Create store wallet</Button>
-                    )}
-                  </div>
-                </form>
+                <div className="grid w-full items-center gap-4">
+                  {farcasterFid ? (
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="name">Farcaster username</Label>
+                      <CopyInput text={farcasterFid} />
+                    </div>
+                  ) : (
+                    <p>No Farcaster account connected</p>
+                  )}
+                  {userHasEmbeddedWallet() ? (
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="name">Embedded wallet</Label>
+                      <CopyInput
+                        text={truncatedAddress}
+                        copyText={embeddedWalletAddress}
+                      />
+                    </div>
+                  ) : (
+                    <Button>Create store wallet</Button>
+                  )}
+                </div>
+
                 {setShopUrl && (
                   <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
