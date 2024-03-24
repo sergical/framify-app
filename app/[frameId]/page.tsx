@@ -34,21 +34,15 @@ export async function generateMetadata(
   const frameMetadata = getFrameMetadata({
     buttons: [
       {
+        label: "View on framify.xyz",
+        action: "link",
+        target: `${process.env.NEXT_PUBLIC_URL}/{frame.id}`,
+      },
+      {
         label: "Checkout with Shopify",
         action: "link",
         target: frame.checkoutUrl,
       },
-      {
-        label: "Checkout with Coinbase Commerce",
-        action: "link",
-        target: "https://commerce.coinbase.com",
-      },
-      {
-        label: "Checkout on framify.xyz",
-        action: "link",
-        target: `${process.env.NEXT_PUBLIC_URL}/{frame.id}`,
-      },
-
       {
         label: "Buy with Base",
         action: "tx",

@@ -4,7 +4,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const fid = searchParams.get("fid");
   if (!fid) {
-    return { status: 400, body: "Missing fid" };
+    throw new Error("No fid provided");
   }
 
   const orders = await db.order.findMany({
