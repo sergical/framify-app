@@ -8,6 +8,12 @@ const nextConfig = {
         port: "",
         pathname: "/s/files/**",
       },
+      {
+        protocol: "https",
+        hostname: "tailwindui.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

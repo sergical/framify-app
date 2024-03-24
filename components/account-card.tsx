@@ -41,9 +41,6 @@ export default function AccountCard() {
     <div>
       {user ? (
         <>
-          <div className="flex justify-end mb-2">
-            <DynamicWidget />
-          </div>
           <Card>
             <CardHeader>
               <CardTitle>Your account</CardTitle>
