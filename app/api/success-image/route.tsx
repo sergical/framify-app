@@ -14,31 +14,28 @@ export async function GET(request: Request) {
     });
   }
 
+  const imageData = await fetch(
+    new URL(`${process.env.NEXT_PUBLIC_URL}/logo.png`, import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
   return new ImageResponse(
     (
       <div
         style={{
           display: "flex",
           fontSize: 30,
-          color: "black",
-          background: "#f6f6f6",
+          color: "white",
+          background: "#855DCD",
           width: "100%",
           height: "100%",
-          paddingTop: 50,
+          paddingTop: 20,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {/* <img
-          width="256"
-          height="256"
-          src={`https://github.com/${username}.png`}
-          style={{
-            borderRadius: 128,
-          }}
-        /> */}
-        <p>You&apos;ve successfully purchased the {productName}.</p>
+        <img width="200" height="200" src={imageData} />
+        <p>Congrats! You&apos;ve successfully purchased the {productName}.</p>
         <p>
           Leave your email below to receive a link to complete your shipping
           details.

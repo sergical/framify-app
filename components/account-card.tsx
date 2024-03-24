@@ -19,8 +19,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { CopyInput } from "./ui/copy-input";
 import Link from "next/link";
+import { Input } from "./ui/input";
+import { useState } from "react";
 
-export default function AccountCard() {
+export default function AccountCard({
+  setShopUrl,
+  shopUrl,
+}: {
+  setShopUrl?: (shopUrl: string) => void;
+  shopUrl?: string | undefined;
+}) {
+  const [shopValue, setShopValue] = useState(shopUrl || "");
   const { user } = useDynamicContext();
   const farcasterFid = user?.verifiedCredentials.filter(
     (c) => c.oauthProvider === "farcaster"
@@ -50,37 +59,60 @@ export default function AccountCard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form>
-                <div className="grid w-full items-center gap-4">
-                  {farcasterFid ? (
+              <div className="grid gap-4">
+                <form>
+                  <div className="grid w-full items-center gap-4">
+                    {farcasterFid ? (
+                      <div className="flex flex-col space-y-1.5">
+                        <Label htmlFor="name">Farcaster username</Label>
+                        <CopyInput text={farcasterFid} />
+                      </div>
+                    ) : (
+                      <p>No Farcaster account connected</p>
+                    )}
+                    {userHasEmbeddedWallet() ? (
+                      <div className="flex flex-col space-y-1.5">
+                        <Label htmlFor="name">Embedded wallet</Label>
+                        <CopyInput
+                          text={truncatedAddress}
+                          copyText={embeddedWalletAddress}
+                        />
+                      </div>
+                    ) : (
+                      <Button>Create store wallet</Button>
+                    )}
+                  </div>
+                </form>
+                {setShopUrl && (
+                  <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Farcaster username</Label>
-                      <CopyInput text={farcasterFid} />
-                    </div>
-                  ) : (
-                    <p>No Farcaster account connected</p>
-                  )}
-                  {userHasEmbeddedWallet() ? (
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Embedded wallet</Label>
-                      <CopyInput
-                        text={truncatedAddress}
-                        copyText={embeddedWalletAddress}
+                      <Label htmlFor="name">Shopify URL</Label>
+                      <Input
+                        type="text"
+                        name="shopUrl"
+                        value={shopValue}
+                        onChange={(e) => setShopValue(e.target.value)}
+                        disabled={!!shopUrl}
                       />
                     </div>
-                  ) : (
-                    <Button>Create store wallet</Button>
-                  )}
-                </div>
-              </form>
+                    {!shopUrl ? (
+                      <Button onClick={() => setShopUrl(shopValue)}>
+                        Save
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              </div>
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button variant="outline">Logout</Button>
-              <Button asChild>
-                <Link href="https://accounts.shopify.com" target="_blank">
-                  Go to your store
-                </Link>
-              </Button>
+              {setShopUrl && (
+                <Button asChild>
+                  <Link href="https://accounts.shopify.com" target="_blank">
+                    Go to your store
+                  </Link>
+                </Button>
+              )}
             </CardFooter>
           </Card>
         </>

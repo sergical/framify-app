@@ -26,8 +26,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
 
   const friendlyName = convertToSlug(productName || "frame");
   const frame_id = `${frameId}-${friendlyName}`;
-  console.log("frame_id", frame_id);
-  console.log("body", body);
+
   try {
     await fdk.sendAnalytics(frame_id, body as any, "tx");
   } catch (error) {

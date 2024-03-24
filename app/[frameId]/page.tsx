@@ -39,6 +39,17 @@ export async function generateMetadata(
         target: frame.checkoutUrl,
       },
       {
+        label: "Checkout with Coinbase Commerce",
+        action: "link",
+        target: "https://commerce.coinbase.com",
+      },
+      {
+        label: "Checkout on framify.xyz",
+        action: "link",
+        target: `${process.env.NEXT_PUBLIC_URL}/{frame.id}`,
+      },
+
+      {
         label: "Buy with Base",
         action: "tx",
         target: `${process.env.NEXT_PUBLIC_URL}/api/tx?frameId=${frame.id}&address=${frame.address}&productName=${frame.name}`,
