@@ -17,20 +17,21 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
   const frameId = req.nextUrl.searchParams.get("frameId");
   const address = req.nextUrl.searchParams.get("address") as `0x${string}`;
 
-  const { isValid, message } = await getFrameMessage(body, {
-    neynarApiKey: process.env.NEYNAR_API_KEY,
-  });
+  console.log("frameId", frameId, "address", address);
+  // const { isValid, message } = await getFrameMessage(body, {
+  //   neynarApiKey: process.env.NEYNAR_API_KEY,
+  // });
 
-  console.log("isValid", isValid, message);
-  if (!isValid) {
-    return new NextResponse("Message not valid", { status: 500 });
-  }
-  let state = {};
-  try {
-    state = JSON.parse(decodeURIComponent(message?.state?.serialized || ""));
-  } catch (e) {
-    console.error(e);
-  }
+  // console.log("isValid", isValid, message);
+  // if (!isValid) {
+  //   return new NextResponse("Message not valid", { status: 500 });
+  // }
+  // let state = {};
+  // try {
+  //   state = JSON.parse(decodeURIComponent(message?.state?.serialized || ""));
+  // } catch (e) {
+  //   console.error(e);
+  // }
 
   const txData: FrameTransactionResponse = {
     chainId: `eip155:${baseSepolia.id}`,
@@ -41,7 +42,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
       value: parseEther("0.001").toString(), // TODO get product price
     },
   };
-  return NextResponse.json({ txData, frameId });
+
+  console.log("txData", txData);
+  return NextResponse.json(txData);
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
