@@ -32,6 +32,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error(e);
   }
 
+  const productName = state?.name;
+
   return new NextResponse(
     getFrameHtmlResponse({
       input: {
@@ -39,13 +41,16 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       },
       buttons: [
         {
+          label: "Submit",
+        },
+        {
           label: `View transaction`,
           action: "link",
-          target: `${baseSepolia.blockExplorers.default.url}/${body?.untrustedData?.transactionId}`,
+          target: `${baseSepolia.blockExplorers.default.url}/tx/${body?.untrustedData?.transactionId}`,
         },
       ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/success-image?`,
+        src: `${NEXT_PUBLIC_URL}/api/success-image?productName=${productName}`,
       },
       state: {
         ...state,
