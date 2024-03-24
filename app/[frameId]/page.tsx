@@ -36,7 +36,7 @@ export async function generateMetadata(
       {
         label: "View on framify.xyz",
         action: "link",
-        target: `${process.env.NEXT_PUBLIC_URL}/{frame.id}`,
+        target: `${process.env.NEXT_PUBLIC_URL}/${frame.id}`,
       },
       {
         label: "Checkout with Shopify",
@@ -66,6 +66,7 @@ export async function generateMetadata(
     },
     other: {
       ...frameMetadata,
+      "of:accepts:xmtp": "2024-02-01",
     },
   };
 }
