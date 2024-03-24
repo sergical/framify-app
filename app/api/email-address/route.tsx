@@ -20,6 +20,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const frameId = parseInt(req.nextUrl.searchParams.get("frameId") || "");
   const shop = req.nextUrl.searchParams.get("shop");
   const fid = parseInt(req.nextUrl.searchParams.get("fid") || "");
+  const name = req.nextUrl.searchParams.get("productName") || "";
 
   const { isValid, message } = await getFrameMessage(body, {
     neynarApiKey: process.env.NEYNAR_API_KEY,

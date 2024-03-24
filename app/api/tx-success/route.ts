@@ -51,7 +51,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       state: {
         transactionId: body?.untrustedData?.transactionId,
       },
-      postUrl: `${NEXT_PUBLIC_URL}/api/email-address?frameId=${frameId}&shop=${shop}&fid=${fid}`,
+      postUrl: `${NEXT_PUBLIC_URL}/api/email-address?frameId=${frameId}&shop=${shop}&fid=${fid}&productName=${productName}`,
     })
   );
 }
