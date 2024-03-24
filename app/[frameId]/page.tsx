@@ -7,6 +7,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import GenericProducts from "@/components/generic-products";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: { frameId: string };
 };
