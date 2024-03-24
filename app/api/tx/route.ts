@@ -20,19 +20,17 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     neynarApiKey: process.env.NEYNAR_API_KEY,
   });
 
-  const friendlyName = convertToSlug(productName || "frame");
-  const frame_id = `${frameId}-${friendlyName}`;
-
-  await fdk.sendAnalytics(frame_id, body as any);
-
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
   }
-  let state = {};
+
+  const friendlyName = convertToSlug(productName || "frame");
+  const frame_id = `${frameId}-${friendlyName}`;
+
   try {
-    state = JSON.parse(decodeURIComponent(message?.state?.serialized || ""));
-  } catch (e) {
-    console.error(e);
+    await fdk.sendAnalytics(frame_id, body as any, "tx");
+  } catch (error) {
+    console.error("Error sending analytics", error);
   }
 
   const txData: FrameTransactionResponse = {
@@ -45,7 +43,6 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     },
   };
 
-  console.log("txData", txData);
   return NextResponse.json(txData);
 }
 

@@ -31,7 +31,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   const friendlyName = convertToSlug(productName || "frame");
   const frame_id = `${frameId}-${friendlyName}`;
-  await fdk.sendAnalytics(frame_id, body as any);
+  try {
+    await fdk.sendAnalytics(frame_id, body as any, "tx-success");
+  } catch (error) {
+    console.error("Error sending analytics", error);
+  }
 
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });

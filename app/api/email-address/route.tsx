@@ -31,7 +31,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   const friendlyName = convertToSlug(productName || "frame");
   const frame_id = `${frameId}-${friendlyName}`;
-  await fdk.sendAnalytics(frame_id, body as any, "email-address");
+  try {
+    await fdk.sendAnalytics(frame_id, body as any, "email-address");
+  } catch (error) {
+    console.error("Error sending analytics", error);
+  }
 
   const emailAddress = message.input || "";
   const purchasedBy = message.interactor.fid || 0;
