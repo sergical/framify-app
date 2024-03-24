@@ -21,6 +21,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse | Response> {
     neynarApiKey: process.env.NEYNAR_API_KEY,
   });
 
+  console.log("isValid", isValid, message);
   if (!isValid) {
     return new NextResponse("Message not valid", { status: 500 });
   }
